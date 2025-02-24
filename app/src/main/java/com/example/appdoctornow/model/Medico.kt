@@ -10,4 +10,8 @@ data class Medico(
     val apellidos: String,
     val especialidad: String,
     val estado: String
-)
+){
+    override fun toString(): String {
+        return "$nombres $apellidos"
+    }
+}

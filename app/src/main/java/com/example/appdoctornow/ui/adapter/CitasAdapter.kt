@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appdoctornow.R
 import com.example.appdoctornow.data.local.database.AppDatabase
@@ -22,6 +21,7 @@ class CitasAdapter(
 ) : RecyclerView.Adapter<CitasAdapter.CitaViewHolder>() {
 
     inner class CitaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val tvEspecialidad: TextView = itemView.findViewById(R.id.tvEspecialidad)
         private val tvMedico: TextView = itemView.findViewById(R.id.tvMedico)
         private val tvFechaHora: TextView = itemView.findViewById(R.id.tvFechaHora)
         private val btnCancelarCita: Button = itemView.findViewById(R.id.btnCancelarCita)
@@ -30,10 +30,12 @@ class CitasAdapter(
             // Mostrar la fecha y hora de la cita
             tvFechaHora.text = "Fecha: ${cita.fecha} - Hora: ${cita.hora}"
 
-            // Obtener el nombre del médico desde la base de datos
+            // Obtener el médico y su especialidad desde la base de datos
             CoroutineScope(Dispatchers.IO).launch {
                 val medico = database.medicoDao().getMedicoById(cita.idMedico)
                 withContext(Dispatchers.Main) {
+                    // Mostrar la especialidad y el nombre del médico
+                    tvEspecialidad.text = "Especialidad: ${medico?.especialidad}"
                     tvMedico.text = "Médico: ${medico?.nombres} ${medico?.apellidos}"
                 }
             }

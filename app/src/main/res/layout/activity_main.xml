@@ -9,53 +9,41 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <!-- Logo de la aplicación -->
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:src="@drawable/logo_app"
+        android:layout_marginBottom="32dp" />
+
+    <!-- Botón para iniciar sesión -->
+    <Button
+        android:id="@+id/btnIniciarSesion"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:gravity="center">
+        android:text="Iniciar Sesión"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/azul_medico"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp" />
 
-        <!-- Logo de la aplicación -->
-        <ImageView
-            android:id="@+id/ivLogo"
-            android:layout_width="350dp"
-            android:layout_height="350dp"
-            android:src="@drawable/logo_app"
-            android:layout_marginBottom="32dp" />
+    <!-- Botón para crear cuenta -->
+    <Button
+        android:id="@+id/btnCrearCuenta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Crear Cuenta"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/azul_medico"
+        android:padding="12dp" />
 
-        <!-- Botón para iniciar sesión -->
-        <Button
-            android:id="@+id/btnIniciarSesion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Iniciar Sesión"
-            android:textSize="16sp"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/azul_medico"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Label -->
-        <TextView
-            android:id="@+id/tvLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="¿Todavía no tienes una cuenta para agendar tu cita?"
-            android:textSize="14sp"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Botón para crear cuenta -->
-        <Button
-            android:id="@+id/btnCrearCuenta"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Crear Cuenta"
-            android:textSize="16sp"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/azul_medico"
-            android:padding="12dp" />
-
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>
+    </ScrollView>

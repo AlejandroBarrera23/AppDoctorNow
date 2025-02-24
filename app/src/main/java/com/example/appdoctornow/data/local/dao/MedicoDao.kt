@@ -20,4 +20,10 @@ interface MedicoDao {
 
     @Query("SELECT * FROM medico WHERE id = :id")
     suspend fun getMedicoById(id: Int): Medico?
+
+    @Query("SELECT DISTINCT especialidad FROM medico")
+    suspend fun getEspecialidades(): List<String>
+
+    @Query("SELECT * FROM medico WHERE especialidad = :especialidad")
+    suspend fun getMedicosPorEspecialidad(especialidad: String): List<Medico>
 }

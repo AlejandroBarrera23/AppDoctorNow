@@ -28,6 +28,14 @@ interface CitaDao {
     @Query("SELECT hora FROM cita WHERE fecha = :fecha AND idMedico = :idMedico AND estado IN ('Confirmada', 'Pendiente')")
     suspend fun getHorasOcupadas(fecha: String, idMedico: Int): List<String>
 
+    @Query("""
+    SELECT * FROM cita 
+    WHERE idUsuario = :userId 
+    AND fecha = :fecha 
+    AND idMedico IN (SELECT id FROM medico WHERE especialidad = :especialidad)
+    AND estado IN ('Confirmada', 'Pendiente')""")
+    suspend fun getCitasByUsuarioFechaEspecialidad(userId: Int, fecha: String, especialidad: String): List<Cita>
+
     @Update
     suspend fun update(cita: Cita)
 }

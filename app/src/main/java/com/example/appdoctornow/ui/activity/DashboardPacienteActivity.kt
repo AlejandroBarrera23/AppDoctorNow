@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -24,7 +25,6 @@ import com.example.appdoctornow.model.Cita
 import com.example.appdoctornow.model.Medico
 import com.example.appdoctornow.model.Usuario
 import com.example.appdoctornow.ui.adapter.CitasAdapter
-import com.example.appdoctornow.ui.adapter.MedicosAdapter
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -33,6 +33,7 @@ import java.util.Locale
 class DashboardPacienteActivity : AppCompatActivity() {
 
     private lateinit var tvSaludo: TextView
+    private lateinit var spinnerEspecialidades: Spinner
     private lateinit var spinnerMedicos: Spinner
     private lateinit var etFecha: EditText
     private lateinit var spinnerHoras: Spinner
@@ -50,12 +51,19 @@ class DashboardPacienteActivity : AppCompatActivity() {
 
         // Inicializar vistas
         tvSaludo = findViewById(R.id.tvSaludo)
+        spinnerEspecialidades = findViewById(R.id.spinnerEspecialidades)
         spinnerMedicos = findViewById(R.id.spinnerMedicos)
         etFecha = findViewById(R.id.etFecha)
         spinnerHoras = findViewById(R.id.spinnerHoras)
         btnAgendarCita = findViewById(R.id.btnAgendarCita)
         rvCitas = findViewById(R.id.rvCitas)
         btnCerrarSesion = findViewById(R.id.btnCerrarSesion)
+
+        // Deshabilitar controles al inicio
+        spinnerMedicos.isEnabled = false
+        etFecha.isEnabled = false
+        spinnerHoras.isEnabled = false
+        btnAgendarCita.isEnabled = false
 
         // Inicializar la base de datos
         database = AppDatabase.getDatabase(this)
@@ -77,12 +85,16 @@ class DashboardPacienteActivity : AppCompatActivity() {
             mostrarSelectorFecha()
         }
 
-        // Cargar médicos disponibles
-        cargarMedicos()
+        // Cargar especialidades disponibles
+        cargarEspecialidades()
 
         // Configurar el botón de agendar cita
         btnAgendarCita.setOnClickListener {
-            agendarCita()
+            if (validarCampos()) {
+                agendarCita()
+            } else {
+                Toast.makeText(this, "Seleccione todas las opciones", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // Configurar la lista de citas
@@ -142,8 +154,13 @@ class DashboardPacienteActivity : AppCompatActivity() {
         val datePicker = DatePickerDialog(
             this,
             { _, year, month, day ->
-                val fechaSeleccionada = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calendar.time)
+                // Crear un nuevo Calendar con la fecha seleccionada
+                val selectedCalendar = Calendar.getInstance().apply {
+                    set(year, month, day)
+                }
+                val fechaSeleccionada = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(selectedCalendar.time)
                 etFecha.setText(fechaSeleccionada)
+                spinnerHoras.isEnabled = true // Habilitar el Spinner de horarios
                 cargarHorasDisponibles()
             },
             calendar.get(Calendar.YEAR),
@@ -154,24 +171,107 @@ class DashboardPacienteActivity : AppCompatActivity() {
         datePicker.show()
     }
 
-    private fun cargarMedicos() {
+    private fun cargarEspecialidades() {
         lifecycleScope.launch {
-            val medicos = database.medicoDao().getAllMedicos()
-            val adapter = MedicosAdapter(this@DashboardPacienteActivity, medicos)
+            // Obtener todas las especialidades únicas desde la base de datos
+            val especialidades = database.medicoDao().getEspecialidades()
+
+            // Agregar un placeholder al inicio de la lista
+            val especialidadesConPlaceholder = mutableListOf("Seleccione una especialidad")
+            especialidadesConPlaceholder.addAll(especialidades)
+
+            // Configurar el adaptador para el spinner de especialidades
+            val adapter = ArrayAdapter(this@DashboardPacienteActivity, android.R.layout.simple_spinner_item, especialidadesConPlaceholder)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerEspecialidades.adapter = adapter
+
+            // Configurar el listener para cargar médicos cuando se seleccione una especialidad
+            spinnerEspecialidades.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    if (position > 0) { // Ignorar el placeholder
+                        val especialidadSeleccionada = especialidades[position - 1]
+                        cargarMedicos(especialidadSeleccionada)
+                        spinnerMedicos.isEnabled = true // Habilitar el Spinner de médicos
+                    } else {
+                        // Restablecer placeholders y bloquear controles
+                        limpiarYBloquearControles()
+                    }
+                    verificarCamposSeleccionados()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    verificarCamposSeleccionados()
+                }
+            }
+        }
+    }
+
+    private fun cargarMedicos(especialidad: String) {
+        lifecycleScope.launch {
+            // Obtener los médicos de la especialidad seleccionada
+            val medicos = database.medicoDao().getMedicosPorEspecialidad(especialidad)
+
+            // Agregar un placeholder al inicio de la lista
+            val medicosConPlaceholder = mutableListOf<Any>("Seleccione un médico")
+            medicosConPlaceholder.addAll(medicos)
+
+            // Configurar el adaptador para el spinner de médicos
+            val adapter = object : ArrayAdapter<Any>(this@DashboardPacienteActivity, android.R.layout.simple_spinner_item, medicosConPlaceholder) {
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val view = super.getView(position, convertView, parent)
+                    val textView = view.findViewById<TextView>(android.R.id.text1)
+                    val item = getItem(position)
+                    textView.text = when (item) {
+                        is Medico -> item.toString() // Mostrar el nombre y apellido del médico
+                        else -> item.toString() // Mostrar el placeholder
+                    }
+                    return view
+                }
+
+                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val view = super.getDropDownView(position, convertView, parent)
+                    val textView = view.findViewById<TextView>(android.R.id.text1)
+                    val item = getItem(position)
+                    textView.text = when (item) {
+                        is Medico -> item.toString() // Mostrar el nombre y apellido del médico
+                        else -> item.toString() // Mostrar el placeholder
+                    }
+                    return view
+                }
+            }
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerMedicos.adapter = adapter
+
+            // Configurar el listener para habilitar el selector de fecha cuando se seleccione un médico
+            spinnerMedicos.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    if (position > 0) { // Ignorar el placeholder
+                        etFecha.isEnabled = true // Habilitar el selector de fecha
+                    } else {
+                        etFecha.isEnabled = false // Deshabilitar el selector de fecha
+                    }
+                    verificarCamposSeleccionados()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    verificarCamposSeleccionados()
+                }
+            }
         }
     }
 
     private fun cargarHorasDisponibles() {
         val fechaSeleccionada = etFecha.text.toString()
         if (fechaSeleccionada.isEmpty()) {
-            Toast.makeText(this, "Seleccione una fecha primero", Toast.LENGTH_SHORT).show()
+            spinnerHoras.setSelection(0) // Restablecer placeholder "Seleccione un horario"
+            spinnerHoras.isEnabled = false // Deshabilitar el Spinner de horarios
             return
         }
 
-        val medico = spinnerMedicos.selectedItem as? Medico
-        if (medico == null) {
-            Toast.makeText(this, "Seleccione un médico", Toast.LENGTH_SHORT).show()
+        val medico = spinnerMedicos.selectedItem
+        if (medico !is Medico) { // Si no es un Medico, es el placeholder
+            spinnerHoras.setSelection(0) // Restablecer placeholder "Seleccione un horario"
+            spinnerHoras.isEnabled = false // Deshabilitar el Spinner de horarios
             return
         }
 
@@ -179,15 +279,19 @@ class DashboardPacienteActivity : AppCompatActivity() {
             // Obtener las horas ocupadas para la fecha y el médico seleccionado
             val horasOcupadas = database.citaDao().getHorasOcupadas(fechaSeleccionada, medico.id)
 
-            // Definir todos los horarios disponibles
-            val todasLasHoras = listOf("09:00", "10:00", "11:00", "12:00")
+            // Definir todos los horarios disponibles con un placeholder
+            val todasLasHoras = listOf("Seleccione un horario", "09:00", "10:00", "11:00", "12:00")
 
             // Filtrar las horas disponibles
-            val horasDisponibles = todasLasHoras.filter { !horasOcupadas.contains(it) }
+            val horasDisponibles = todasLasHoras.filter { it == "Seleccione un horario" || !horasOcupadas.contains(it) }
 
             // Actualizar el spinner de horas
             val adapter = ArrayAdapter(this@DashboardPacienteActivity, android.R.layout.simple_spinner_item, horasDisponibles)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerHoras.adapter = adapter
+
+            // Habilitar el Spinner de horarios después de cargar las horas
+            spinnerHoras.isEnabled = true
         }
     }
 
@@ -196,8 +300,8 @@ class DashboardPacienteActivity : AppCompatActivity() {
         val fecha = etFecha.text.toString()
         val hora = spinnerHoras.selectedItem as? String
 
-        if (medico == null || fecha.isEmpty() || hora == null) {
-            Toast.makeText(this, "Seleccione un médico, una fecha y una hora", Toast.LENGTH_SHORT).show()
+        if (medico == null || fecha.isEmpty() || hora == null || hora == "Seleccione un horario") {
+            Toast.makeText(this, "Seleccione todas las opciones", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -218,10 +322,19 @@ class DashboardPacienteActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            // Verificar si el usuario ya tiene una cita en el mismo horario
-            val citaExistente = database.citaDao().getCitaByUsuarioYFechaHora(usuario.id, fecha, hora)
-            if (citaExistente != null) {
-                Toast.makeText(this@DashboardPacienteActivity, "Ya tiene una cita agendada en este horario", Toast.LENGTH_SHORT).show()
+            // Verificar si ya tiene una cita para la misma especialidad en esta fecha
+            val citasExistentes = database.citaDao().getCitasByUsuarioFechaEspecialidad(
+                usuario.id,
+                fecha,
+                medico.especialidad
+            )
+
+            if (citasExistentes.isNotEmpty()) {
+                Toast.makeText(
+                    this@DashboardPacienteActivity,
+                    "Ya tiene una cita para ${medico.especialidad} en esta fecha",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@launch
             }
 
@@ -246,14 +359,37 @@ class DashboardPacienteActivity : AppCompatActivity() {
             Toast.makeText(this@DashboardPacienteActivity, "Cita agendada exitosamente", Toast.LENGTH_SHORT).show()
 
             // Limpiar campos después de agendar
-            spinnerMedicos.setSelection(0) // Reiniciar el spinner de médicos
-            etFecha.text.clear() // Limpiar el campo de fecha
-            spinnerHoras.setSelection(0) // Reiniciar el spinner de horas
+            limpiarCampos()
 
-            // Actualizar la lista de citas y horas disponibles
+            // Actualizar la lista de citas
             cargarCitasConfirmadas()
-            cargarHorasDisponibles()
         }
+    }
+
+    private fun limpiarCampos() {
+        // Restablecer placeholders
+        spinnerEspecialidades.setSelection(0) // Restablecer placeholder "Seleccione una especialidad"
+        spinnerMedicos.setSelection(0) // Restablecer placeholder "Seleccione un médico"
+        etFecha.text.clear() // Limpiar el campo de fecha
+        spinnerHoras.setSelection(0) // Restablecer placeholder "Seleccione un horario"
+
+        // Deshabilitar controles después de restablecer placeholders
+        spinnerMedicos.isEnabled = false
+        etFecha.isEnabled = false
+        spinnerHoras.isEnabled = false
+        btnAgendarCita.isEnabled = false
+    }
+
+    private fun limpiarYBloquearControles() {
+        // Restablecer placeholders
+        spinnerMedicos.setSelection(0) // Restablecer placeholder "Seleccione un médico"
+        etFecha.text.clear() // Limpiar el campo de fecha
+        spinnerHoras.setSelection(0) // Restablecer placeholder "Seleccione un horario"
+
+        // Deshabilitar controles después de restablecer placeholders
+        spinnerMedicos.isEnabled = false
+        etFecha.isEnabled = false
+        spinnerHoras.isEnabled = false
     }
 
     private fun cargarCitasConfirmadas() {
@@ -286,7 +422,15 @@ class DashboardPacienteActivity : AppCompatActivity() {
         // Configurar listeners para actualizar los horarios y el estado del botón
         spinnerMedicos.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                cargarHorasDisponibles()
+                if (position > 0) { // Ignorar el placeholder
+                    etFecha.isEnabled = true // Habilitar el selector de fecha
+                } else {
+                    // Restablecer placeholders y bloquear controles
+                    etFecha.text.clear() // Limpiar el campo de fecha
+                    spinnerHoras.setSelection(0) // Restablecer placeholder "Seleccione un horario"
+                    etFecha.isEnabled = false // Deshabilitar el selector de fecha
+                    spinnerHoras.isEnabled = false // Deshabilitar el Spinner de horarios
+                }
                 verificarCamposSeleccionados()
             }
 
@@ -315,11 +459,36 @@ class DashboardPacienteActivity : AppCompatActivity() {
         }
     }
 
-    private fun verificarCamposSeleccionados() {
-        val medicoSeleccionado = spinnerMedicos.selectedItem != null
-        val fechaSeleccionada = etFecha.text.isNotEmpty()
-        val horaSeleccionada = spinnerHoras.selectedItem != null
+    private fun validarCampos(): Boolean {
+        // Verificar si se seleccionó una especialidad válida
+        val especialidadSeleccionada = spinnerEspecialidades.selectedItem as? String
+        if (especialidadSeleccionada == null || especialidadSeleccionada == "Seleccione una especialidad") {
+            return false
+        }
 
-        btnAgendarCita.isEnabled = medicoSeleccionado && fechaSeleccionada && horaSeleccionada
+        // Verificar si se seleccionó un médico válido
+        val medicoSeleccionado = spinnerMedicos.selectedItem
+        if (medicoSeleccionado !is Medico) { // Si no es un Medico, es el placeholder
+            return false
+        }
+
+        // Verificar si se seleccionó una fecha
+        val fechaSeleccionada = etFecha.text.toString()
+        if (fechaSeleccionada.isEmpty()) {
+            return false
+        }
+
+        // Verificar si se seleccionó un horario válido
+        val horaSeleccionada = spinnerHoras.selectedItem as? String
+        if (horaSeleccionada == null || horaSeleccionada == "Seleccione un horario") {
+            return false
+        }
+
+        // Si todos los campos son válidos, retornar true
+        return true
+    }
+
+    private fun verificarCamposSeleccionados() {
+        btnAgendarCita.isEnabled = validarCampos()
     }
 }

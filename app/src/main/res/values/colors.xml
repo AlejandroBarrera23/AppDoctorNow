@@ -3,4 +3,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="azul_medico">#2196F3</color> <!-- Azul médico -->
+    <color name="medical_blue">#007ACC</color>
+    <color name="medical_blue_dark">#005A99</color>
+    <color name="medical_blue_light">#3399FF</color>
+    <color name ="rojo">#ff0000</color>
 </resources>

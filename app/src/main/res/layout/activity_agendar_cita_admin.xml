@@ -13,43 +13,35 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Botón de Cerrar Sesión (alineado a la derecha) -->
-        <Button
-            android:id="@+id/btnCerrarSesion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cerrar Sesión"
-            android:textSize="14sp"
-            android:textColor="@color/azul_medico"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="8dp"
-            android:layout_gravity="end"
-        android:gravity="end|center_vertical" />
-
-        <!-- Saludo Personalizado -->
+        <!-- Título -->
         <TextView
-            android:id="@+id/tvSaludo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="¡Hola, [Nombre] [Apellido]!"
+            android:text="Agendar Cita para Paciente"
             android:textSize="22sp"
             android:textColor="@android:color/black"
             android:textStyle="bold"
             android:gravity="center"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="32dp" />
+            android:layout_marginBottom="24dp" />
 
-        <!-- Sección para Agendar Citas -->
+        <!-- Selección de Paciente -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Agenda una nueva cita"
-            android:textSize="18sp"
+            android:text="Seleccione un Paciente"
+            android:textSize="14sp"
             android:textColor="@android:color/black"
-            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <Spinner
+            android:id="@+id/spinnerPacientes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Selección de Médico -->
+        <!-- Selección de Especialidad -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,6 +58,7 @@
             android:padding="12dp"
             android:layout_marginBottom="16dp" />
 
+        <!-- Selección de Médico -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -130,23 +123,6 @@
             android:backgroundTint="@color/azul_medico"
             android:padding="12dp"
             android:layout_marginBottom="32dp" />
-
-        <!-- Lista de Citas Confirmadas -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Mis Citas Confirmadas"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCitas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            tools:listitem="@layout/item_cita" />
 
     </LinearLayout>
 </ScrollView>

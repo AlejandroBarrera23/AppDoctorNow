@@ -5,32 +5,31 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.appdoctornow.R
 import com.example.appdoctornow.data.local.database.AppDatabase
 import kotlinx.coroutines.launch
 
-class LoginActivity : AppCompatActivity() {
+class LoginAdminActivity : AppCompatActivity() {
 
-    private lateinit var etNumeroIdentificacion: EditText
-    private lateinit var etContraseña: EditText
-    private lateinit var btnLogin: Button
-    private lateinit var tvMensajeError: TextView
+    private lateinit var etNumeroIdentificacionAdmin: EditText
+    private lateinit var etContraseñaAdmin: EditText
+    private lateinit var btnLoginAdmin: Button
+    private lateinit var tvMensajeErrorAdmin: TextView
 
     private lateinit var database: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_login_admin)
 
         // Inicializar vistas
-        etNumeroIdentificacion = findViewById(R.id.etNumeroIdentificacion)
-        etContraseña = findViewById(R.id.etContraseña)
-        btnLogin = findViewById(R.id.btnLogin)
-        tvMensajeError = findViewById(R.id.tvMensajeError)
-        val btnRegresar = findViewById<Button>(R.id.btnRegresarLogin)
+        etNumeroIdentificacionAdmin = findViewById(R.id.etNumeroIdentificacionAdmin)
+        etContraseñaAdmin = findViewById(R.id.etContraseñaAdmin)
+        btnLoginAdmin = findViewById(R.id.btnLoginAdmin)
+        tvMensajeErrorAdmin = findViewById(R.id.tvMensajeErrorAdmin)
+        val btnRegresar = findViewById<Button>(R.id.btnRegresarLoginAdmin)
 
         // Configurar el botón de regresar
         btnRegresar.setOnClickListener {
@@ -43,11 +42,11 @@ class LoginActivity : AppCompatActivity() {
         database = AppDatabase.getDatabase(this)
 
         // Configurar el botón de login
-        btnLogin.setOnClickListener {
-            val numeroIdentificacion = etNumeroIdentificacion.text.toString()
-            val contraseña = etContraseña.text.toString()
+        btnLoginAdmin.setOnClickListener {
+            val usuario = etNumeroIdentificacionAdmin.text.toString()
+            val contraseña = etContraseñaAdmin.text.toString()
 
-            if (numeroIdentificacion.isEmpty() || contraseña.isEmpty()) {
+            if (usuario.isEmpty() || contraseña.isEmpty()) {
                 mostrarError("Todos los campos son obligatorios.")
                 return@setOnClickListener
             }
@@ -55,23 +54,27 @@ class LoginActivity : AppCompatActivity() {
             // Llamar a la función de login en una corrutina
             lifecycleScope.launch {
                 try {
-                    val usuario = database.usuarioDao().login(numeroIdentificacion, contraseña)
+                    val usuario = database.usuarioDao().login(usuario, contraseña)
                     if (usuario != null) {
-                        // Verificar si el usuario es de tipo "Paciente"
-                        if (usuario.tipoUsuario == "Paciente") {
+                        // Verificar si el usuario es de tipo "Administrador" o "Recepcionista"
+                        if (usuario.tipoUsuario == "Administrador" || usuario.tipoUsuario == "Recepcionista") {
                             // Guardar el ID del usuario en SharedPreferences
                             val sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE)
                             val editor = sharedPreferences.edit()
                             editor.putInt("user_id", usuario.id) // Guardar el ID del usuario
                             editor.apply()
 
-                            // Inicio de sesión exitoso para pacientes
-                            val intent = Intent(this@LoginActivity, DashboardPacienteActivity::class.java)
+                            // Redirigir según el tipo de usuario
+                            val intent = when (usuario.tipoUsuario) {
+                                "Administrador" -> Intent(this@LoginAdminActivity, DashboardAdminActivity::class.java)
+                                "Recepcionista" -> Intent(this@LoginAdminActivity, DashboardAdminActivity::class.java)
+                                else -> Intent(this@LoginAdminActivity, MainActivity::class.java) // Caso por defecto
+                            }
                             startActivity(intent)
                             finish() // Cerrar la actividad de login
                         } else {
-                            // Mostrar mensaje de error si el usuario no es de tipo "Paciente"
-                            mostrarError("Solo los pacientes pueden iniciar sesión.")
+                            // Mostrar mensaje de error si el usuario no es de tipo "Administrador" o "Recepcionista"
+                            mostrarError("Solo administradores y recepcionistas pueden iniciar sesión.")
                         }
                     } else {
                         // Credenciales incorrectas
@@ -86,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun mostrarError(mensaje: String) {
-        tvMensajeError.text = mensaje
-        tvMensajeError.visibility = TextView.VISIBLE
+        tvMensajeErrorAdmin.text = mensaje
+        tvMensajeErrorAdmin.visibility = TextView.VISIBLE
     }
 }

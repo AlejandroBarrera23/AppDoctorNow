@@ -13,8 +13,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Referencias a los botones
+        val btnIniciarSesionAdmin = findViewById<Button>(R.id.btnIniciarSesionAdmin)
         val btnIniciarSesion = findViewById<Button>(R.id.btnIniciarSesion)
         val btnCrearCuenta = findViewById<Button>(R.id.btnCrearCuenta)
+
+        btnIniciarSesionAdmin.setOnClickListener {
+            val intent = Intent(this, LoginAdminActivity::class.java)
+            startActivity(intent)
+        }
 
         // Configurar el botón de iniciar sesión
         btnIniciarSesion.setOnClickListener {

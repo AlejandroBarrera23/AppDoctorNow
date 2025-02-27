@@ -13,80 +13,76 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Botón de Cerrar Sesión (alineado a la derecha) -->
-        <Button
-            android:id="@+id/btnCerrarSesion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cerrar Sesión"
-            android:textSize="14sp"
-            android:textColor="@color/azul_medico"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="8dp"
-            android:layout_gravity="end"
-        android:gravity="end|center_vertical" />
-
-        <!-- Saludo Personalizado -->
+        <!-- Título -->
         <TextView
-            android:id="@+id/tvSaludo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="¡Hola, [Nombre] [Apellido]!"
+            android:text="Editar Cita"
             android:textSize="22sp"
             android:textColor="@android:color/black"
             android:textStyle="bold"
             android:gravity="center"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="32dp" />
+            android:layout_marginBottom="24dp" />
 
-        <!-- Sección para Agendar Citas -->
+        <!-- Selección de Paciente -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Agenda una nueva cita"
-            android:textSize="18sp"
+            android:text="Paciente"
+            android:textSize="14sp"
             android:textColor="@android:color/black"
-            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvPaciente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="[Nombre del Paciente]"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Selección de Especialidad -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Especialidad"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvEspecialidad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="[Especialidad]"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
             android:layout_marginBottom="16dp" />
 
         <!-- Selección de Médico -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Seleccione una Especialidad"
+            android:text="Médico"
             android:textSize="14sp"
             android:textColor="@android:color/black"
             android:layout_marginBottom="4dp" />
-
-        <Spinner
-            android:id="@+id/spinnerEspecialidades"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_background"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp" />
 
         <TextView
+            android:id="@+id/tvMedico"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Seleccione un Médico"
-            android:textSize="14sp"
+            android:text="[Nombre del Médico]"
+            android:textSize="16sp"
             android:textColor="@android:color/black"
-            android:layout_marginBottom="4dp" />
-
-        <Spinner
-            android:id="@+id/spinnerMedicos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_background"
-            android:padding="12dp"
             android:layout_marginBottom="16dp" />
 
         <!-- Selección de Fecha -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Seleccione una Fecha"
+            android:text="Fecha"
             android:textSize="14sp"
             android:textColor="@android:color/black"
             android:layout_marginBottom="4dp" />
@@ -106,7 +102,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Seleccione una Hora"
+            android:text="Hora"
             android:textSize="14sp"
             android:textColor="@android:color/black"
             android:layout_marginBottom="4dp" />
@@ -119,34 +115,28 @@
             android:padding="12dp"
             android:layout_marginBottom="24dp" />
 
-        <!-- Botón para Agendar Cita -->
+        <!-- Botón para Guardar Cambios -->
         <Button
-            android:id="@+id/btnAgendarCita"
+            android:id="@+id/btnGuardarCambios"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Agendar Cita"
+            android:text="Guardar Cambios"
             android:textSize="16sp"
             android:textColor="@android:color/white"
             android:backgroundTint="@color/azul_medico"
             android:padding="12dp"
-            android:layout_marginBottom="32dp" />
-
-        <!-- Lista de Citas Confirmadas -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Mis Citas Confirmadas"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
             android:layout_marginBottom="16dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCitas"
+        <!-- Botón para Cancelar Cita -->
+        <Button
+            android:id="@+id/btnCancelarCita"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            tools:listitem="@layout/item_cita" />
+            android:text="Cancelar Cita"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/rojo"
+            android:padding="12dp" />
 
     </LinearLayout>
 </ScrollView>

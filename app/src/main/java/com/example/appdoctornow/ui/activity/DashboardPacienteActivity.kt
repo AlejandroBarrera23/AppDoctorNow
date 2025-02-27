@@ -247,8 +247,10 @@ class DashboardPacienteActivity : AppCompatActivity() {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     if (position > 0) { // Ignorar el placeholder
                         etFecha.isEnabled = true // Habilitar el selector de fecha
+                        cargarHorasDisponibles() // Actualizar los horarios cuando se selecciona un médico
                     } else {
                         etFecha.isEnabled = false // Deshabilitar el selector de fecha
+                        spinnerHoras.isEnabled = false // Deshabilitar el Spinner de horarios
                     }
                     verificarCamposSeleccionados()
                 }
@@ -420,14 +422,29 @@ class DashboardPacienteActivity : AppCompatActivity() {
 
     private fun configurarListeners() {
         // Configurar listeners para actualizar los horarios y el estado del botón
+        spinnerEspecialidades.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position > 0) { // Ignorar el placeholder
+                    val especialidadSeleccionada = spinnerEspecialidades.selectedItem as String
+                    cargarMedicos(especialidadSeleccionada)
+                    spinnerMedicos.isEnabled = true // Habilitar el Spinner de médicos
+                } else {
+                    limpiarYBloquearControles()
+                }
+                verificarCamposSeleccionados()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                verificarCamposSeleccionados()
+            }
+        }
+
         spinnerMedicos.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (position > 0) { // Ignorar el placeholder
                     etFecha.isEnabled = true // Habilitar el selector de fecha
+                    cargarHorasDisponibles() // Actualizar los horarios cuando se selecciona un médico
                 } else {
-                    // Restablecer placeholders y bloquear controles
-                    etFecha.text.clear() // Limpiar el campo de fecha
-                    spinnerHoras.setSelection(0) // Restablecer placeholder "Seleccione un horario"
                     etFecha.isEnabled = false // Deshabilitar el selector de fecha
                     spinnerHoras.isEnabled = false // Deshabilitar el Spinner de horarios
                 }

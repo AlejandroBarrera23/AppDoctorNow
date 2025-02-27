@@ -5,45 +5,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:padding="16dp">
+    android:padding="20dp"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:padding="16dp">
 
     <!-- Logo de la aplicación -->
     <ImageView
         android:id="@+id/ivLogo"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:src="@drawable/logo_app"
-        android:layout_marginTop="40dp"/>
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/logo_app2"/>
 
     <!-- Botón para iniciar sesión -->
     <Button
-        android:id="@+id/btnIniciarSesion"
+        android:id="@+id/btnIniciarSesionAdmin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Iniciar Sesión"
-        android:textSize="16sp"
+        android:text="Iniciar Sesión (Admin/Recepcionista)"
+        android:textSize="15sp"
         android:textColor="@android:color/white"
-        android:backgroundTint="@color/azul_medico"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp" />
+        android:backgroundTint="@color/medical_blue_dark"
+        android:padding="16dp"
+        android:layout_marginBottom="10dp" />
+
+        <!-- Botón para iniciar sesión -->
+        <Button
+            android:id="@+id/btnIniciarSesion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Iniciar Sesión (Paciente)"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/medical_blue"
+            android:padding="16dp"
+            android:layout_marginBottom="10dp" />
 
     <!-- Botón para crear cuenta -->
     <Button
         android:id="@+id/btnCrearCuenta"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Crear Cuenta"
-        android:textSize="16sp"
+        android:text="Crear Cuenta (Paciente)"
+        android:textSize="15sp"
         android:textColor="@android:color/white"
-        android:backgroundTint="@color/azul_medico"
-        android:padding="12dp" />
+        android:padding="16dp"
+        android:backgroundTint="@color/azul_medico"/>
 
 </LinearLayout>
     </ScrollView>

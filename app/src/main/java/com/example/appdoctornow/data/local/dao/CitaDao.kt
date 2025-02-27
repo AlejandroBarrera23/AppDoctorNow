@@ -38,4 +38,7 @@ interface CitaDao {
 
     @Update
     suspend fun update(cita: Cita)
+
+    @Query("SELECT * FROM cita WHERE id = :citaId")
+    suspend fun getCitaById(citaId: Int): Cita?
 }

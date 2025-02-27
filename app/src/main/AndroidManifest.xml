@@ -22,6 +22,11 @@
             </intent-filter>
         </activity>
 
+        <!-- Actividad de Login Administrador Recepcionista -->
+        <activity
+            android:name=".ui.activity.LoginAdminActivity"
+            android:label="Iniciar Sesión" />
+
         <!-- Actividad de Login -->
         <activity
             android:name=".ui.activity.LoginActivity"

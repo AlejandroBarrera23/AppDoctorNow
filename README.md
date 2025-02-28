@@ -3,6 +3,9 @@
 ## Descripción 📋
 DoctorNow es una aplicación móvil desarrollada en **Kotlin con Android Studio**, diseñada para gestionar citas médicas de manera eficiente. La app permite a los pacientes agendar y cancelar citas, y a los administradores visualizar, filtrar, modificar y eliminar citas. LA APLICACIÓN FUNCIONA ACTUALMENTE DE FORMA LOCAL.
 
+## Demostración
+📺 Mira la demostración de la app aquí: [YouTube](https://youtu.be/29Ce2UHhi5o?si=qLSzaA-HvOslG4aX)
+
 ## Capturas de pantalla
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
   <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/WhatsApp-Image-2025-02-27-at-8.14.26-PM.jpeg" alt="Pantalla principal" width="150" />

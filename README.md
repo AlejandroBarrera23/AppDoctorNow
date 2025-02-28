@@ -1,17 +1,19 @@
 # DoctorNow - Gestión de Citas Médicas
 
 ## Descripción 📋
-DoctorNow es una aplicación móvil desarrollada en **Kotlin con Android Studio**, diseñada para gestionar citas médicas de manera eficiente. La app permite a los pacientes agendar y cancelar citas, y a los administradores visualizar, filtrar, modificar y eliminar citas.
+DoctorNow es una aplicación móvil desarrollada en **Kotlin con Android Studio**, diseñada para gestionar citas médicas de manera eficiente. La app permite a los pacientes agendar y cancelar citas, y a los administradores visualizar, filtrar, modificar y eliminar citas. LA APLICACIÓN FUNCIONA ACTUALMENTE DE FORMA LOCAL.
 
 ## Capturas de pantalla
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
-  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/v1.png" alt="Pantalla principal" width="150" />
-  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/v2.png" alt="Resultado del juego" width="150" />
-  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/v3.png" alt="Opciones del juego" width="150" />
-  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/v4.png" alt="Pantalla de puntuación" width="150" />
-  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/v5.png" alt="Resultado del juego" width="150" />
-  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/v6.png" alt="Opciones del juego" width="150" />
-  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/v7.png" alt="Pantalla de puntuación" width="150" />
+  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/WhatsApp-Image-2025-02-27-at-8.14.26-PM.jpeg" alt="Pantalla principal" width="150" />
+  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/WhatsApp-Image-2025-02-27-at-8.14.25-PM-5.jpeg" alt="Pantalla de puntuación" width="150" />
+  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/WhatsApp-Image-2025-02-27-at-8.14.26-PM-1.jpeg" alt="Resultado del juego" width="150" />
+  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/WhatsApp-Image-2025-02-27-at-8.14.25-PM.jpeg" alt="Opciones del juego" width="150" />
+  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/WhatsApp-Image-2025-02-27-at-8.14.25-PM-2.jpeg" alt="Resultado del juego" width="150" />
+  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/WhatsApp-Image-2025-02-27-at-8.14.25-PM-3.jpeg" alt="Opciones del juego" width="150" />
+  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/WhatsApp-Image-2025-02-27-at-8.14.24-PM.jpeg" alt="Pantalla de puntuación" width="150" />
+  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/WhatsApp-Image-2025-02-27-at-8.14.24-PM-1.jpeg" alt="Opciones del juego" width="150" />
+  <img src="https://programoyaprendo.online/blog/wp-content/uploads/2025/02/WhatsApp-Image-2025-02-27-at-8.14.24-PM-2.jpeg" alt="Pantalla de puntuación" width="150" />
 </div>
 
 ## Características ⚙️
@@ -34,3 +36,7 @@ DoctorNow es una aplicación móvil desarrollada en **Kotlin con Android Studio*
 - **LiveData y ViewModel** para manejo de datos
 - **SharedPreferences** para almacenamiento local
 - **ListView y Spinner** para UI interactiva
+
+## Instalación
+Puedes descargar el archivo APK desde el siguiente enlace:
+[Descargar APK](https://drive.google.com/file/d/1VGTz4uPUdfRWmZwbuGOC80QM-dBC8E5k/view?usp=sharing)
